@@ -7,6 +7,8 @@ void AutoTest() {
 	cout << "Testing isInt()\n";
 	int testVals[6] = { 1, 'a', '1'};
 	cout << "You should be seeing 1 0 0 : ";
+
+	//why? could be clearer # 
 	for (int testVal : testVals) {
 		cout << isInt(testVal) << " ";
 	}
@@ -23,8 +25,11 @@ bool isInt(int val) {
 //*************************************************************************************************************************************
 //This function multplies two numbers using their respective characteristic (c), numerartor (n), and denominator (d)
 bool multiply(int c1, int n1, int d1, int c2, int n2, int d2, char result[], int len) {
+
+	//what does flag do?#
 	bool flag = false;
 
+	//could be more descriptive than ones given#
 	int tempn1, tempn2, c, n, d;
 
 	//making the numbers improper fractions
@@ -39,7 +44,9 @@ bool multiply(int c1, int n1, int d1, int c2, int n2, int d2, char result[], int
 	c = n / d;
 	n = n - (c * d);
 
-	int* number = 0;
+	int * number = 0;
+
+	//if number is a ptr than number is passed by ref itrinsically meaning you don't need to set number = to it. extra()? #
 	number = (numberSplicer(n, number));//doesn't like this or pass by reference
 
 
@@ -49,7 +56,9 @@ bool multiply(int c1, int n1, int d1, int c2, int n2, int d2, char result[], int
 }
 //*************************************************************************************************************************************
 //This function divdes the first number by the second number using their respective characteristic (c), numerartor (n), and denominator (d)
-bool divide(int c1, int n1, int d1, int c2, int n2, int d2, char result[], int len) {
+bool divide(int c1, int n1, int d1, int c2, int n2, int d2, char result[], int len)
+{
+	//why not just return false? #
 	bool flag = false;
 	return flag;
 }
@@ -59,7 +68,7 @@ int getImproperFractionNum(int& c, int &n, int& d) {
 
 	return((c * d) + n);
 }
-
+// I don't know if you can do that with number you should be accessing wacked data #
 int* numberSplicer(int num, int number[]) {
 	
 	int numLen = 0;
