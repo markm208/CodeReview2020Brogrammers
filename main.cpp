@@ -1,6 +1,6 @@
 #include <iostream>
 
-using namespace std;
+#include "characteristic.h"
 
 void testCharacteristicAndMantissa();
 void shouldConvert(char number[], int expectedCharacteristic, int expectedNumerator, int expectedDenominator);
@@ -14,7 +14,14 @@ void testDivide();
 
 int main()
 {
-    cout<<"In-class Code Review"<<endl;
+	//std::string yoooooooo = "was upppppp";
+	//CString aCString = "A string";
+	char badPerString[] = { '1','2','.','.','6','\0' };
+	// .2345 = 0?
+	char goodString[] = {'4' ,'.','2','3','4','5','\0' };
+	char badAlphaString[] = { '1','2','3','4','l','.','0','\0' };
+	int c;
+
 
     //characteristic and mantissa test
     testCharacteristicAndMantissa();
@@ -439,6 +446,7 @@ void testDivide()
                 << endl;
         }
     }
+   
 
     //1.125 / 1.6R = "0.67"
     divide(1, 1, 8, 1, 2, 3, shortArray, SHORT_ARRAY_LENGTH);
