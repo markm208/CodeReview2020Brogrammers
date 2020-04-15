@@ -51,9 +51,17 @@ bool multiply(int c1, int n1, int d1, int c2, int n2, int d2, char result[], int
 	tempn1 = getImproperFractionNum(c1, n1, d1);
 	tempn2 = getImproperFractionNum(c2, n2, d2);
 
+	if (tempn1 < 0 || tempn2 < 0) {//if the numerator was larger than int max
+		return false; 
+	}
+
 	//calculating the answer in an improper fraction
 	n = tempn1 * tempn2;
 	d = d1 * d2;
+
+	if (n < 0 || d < 0) {//if they were larger than int max
+		return false;
+	}
 
 	//converting the answer back into a proper fraction
 	c = n / d;
@@ -77,7 +85,9 @@ bool multiply(int c1, int n1, int d1, int c2, int n2, int d2, char result[], int
 		return retVal; //we do not have enough room!
 	}
 
-	CharacteristicSplicer(c, result, size, totalNegCheck);
+	if (!CharacteristicSplicer(c, result, size, totalNegCheck)) {
+		return false;
+	}
 
 	//We have the characterisitic, but we need to see if we can add a floating point and then a null terminator
 	if(size == len - 1){ //if we only have 1 space left for '\n'
@@ -91,7 +101,9 @@ bool multiply(int c1, int n1, int d1, int c2, int n2, int d2, char result[], int
 	}
 	else{//we have room
 
-		FloatingPointSplicer(n, d, result, size, len);
+		if (!FloatingPointSplicer(n, d, result, size, len)) {
+			return false;
+		}
 
 		result[len- 1] = '\n';
 		retVal = true;
@@ -125,6 +137,10 @@ bool divide(int c1, int n1, int d1, int c2, int n2, int d2, char result[], int l
 	n2 = d2;
 	d2 = tempNum2;
 
+	//I'm not sure why, dy d2 is turning into 0
+	if (d2 == 0) {
+		return false;
+	}
 	c2 = n2 / d2;
 	n2 = n2 - (c2 * d2);
 
@@ -143,12 +159,13 @@ int getImproperFractionNum(int& c, int &n, int& d) {
 
 //this function takes in the characteristic (c), the char array (result), 
 //and the verified size and puts the characterisitic digits into the result array with NO null terminator behind
-void CharacteristicSplicer(int c, char result[], int size, bool totalNegCheck) { 
+//it is a boolean return type to mirror what the floating point function does - it may be necessary in the future
+bool CharacteristicSplicer(int c, char result[], int size, bool totalNegCheck) { 
 
 	if (totalNegCheck) {
 		result[0] = '-';
 	}
-
+	
 	int iter = size - 1; //We are starting from the back but the index is 1 less than size
 	int digit;
 	int offset = (int)'0'; //this is the offset of ascii that from the int 0 to the char 0
@@ -159,12 +176,13 @@ void CharacteristicSplicer(int c, char result[], int size, bool totalNegCheck) {
 		c = c / 10; //shift all digits
 		iter--;
 	}
+	return true; //see descriptin above for reason beind boolean return type
 }
 
 //this function takes in the numerator (n), denominator (d), the result char array (result), the current size of the result array (drntSize),
 //and the allowed length of the result array (alwdLen). It returns the given result char array with a '.' and any following decimals if there are any,
 //and if they fit.
-void FloatingPointSplicer(int n, int d, char result[], int crntSize, int alwdLen){
+bool FloatingPointSplicer(int n, int d, char result[], int crntSize, int alwdLen){
 
 	result[crntSize] = '.';
 	crntSize++; //size is now functioning as an iter
@@ -173,35 +191,33 @@ void FloatingPointSplicer(int n, int d, char result[], int crntSize, int alwdLen
 	//how much room we have
 	int room = alwdLen - 1 - crntSize; //-1 for '\n'
 
-	//converting fraction into x/(10^y) notation by multiplying numerator by 10^room so that we get the number of decimal points we can fit to the left of the '.'
-	int orderOfMagnitude = 1;
-	for (int i = 0; i < room; i++) {
-		orderOfMagnitude = orderOfMagnitude * 10;
-	}
-	n = n * orderOfMagnitude;
+	int decimal;
+	while(room != 0){
 
-	int decimals = n / d; //this is an integer representing the decimals ie 0.123 is 123
-	if (decimals < 10) {//if we only had room for one decimal
-		result[crntSize] = decimals + offset; //making decimal the char of itself
-	}
-	else{
-
-		//temp d is a power of 10 used to splice the decimals
-		int tempd = 1;
-		for (int i = 0; i < room; i++) {
-			tempd = tempd * 10;
+		//if we have room, but no more decimals, fill with 0
+		if (n == 0) {
+			result[crntSize] = '0';
 		}
-		while(crntSize != alwdLen-1){
-			tempd = tempd / 10; //I want to get the first decimal place
-			int digit = (decimals / tempd); //decimal retrieved from front
-			result[crntSize] = digit + offset; //making decimal the char of itself
+		else {
+			n = n * 10;
+
+			//check for going beyond max
+			if (n < 0) {
+				return false;
+			}
+
+			decimal = n / d;
+			result[crntSize] = (char)(decimal + offset);
 
 			//post prep
-			crntSize++;
-			decimals = decimals - (digit * tempd); //this is making the numerator the original without the first number
+			n = (n / 10) - ((decimal * d) / 10);
 		}
-	}
 
+		crntSize++;
+		room--;
+	
+	}
+	return true;
 }
 
 //this function takes in a number and only validats that it is in fact a number. (It does not check for negatives)
