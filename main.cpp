@@ -2,8 +2,7 @@
 #include "add_subtract.h"
 #include "characteristic.h"
 #include <climits>
-
-
+#include "multAndDivide.h"
 
 using namespace std;
 
@@ -19,19 +18,20 @@ void testDivide();
 
 int main(int argc, char * argv[])
 {
+
     //characteristic and mantissa test
     testCharacteristicAndMantissa();
-    
+
     //math function tests
     testMath();
     system("pause");
     return 0;
 
-//>>>>>>> main-tests
 }
 //--
 void testCharacteristicAndMantissa()
 {
+    
     //number with a non-zero characteristic a decimal point and a non-zero mantissa
     shouldConvert("123.456", 123, 456, 1000);
     shouldConvert("    123.456", 123, 456, 1000);
@@ -139,7 +139,7 @@ void testCharacteristicAndMantissa()
 void shouldConvert(const char number[], int expectedCharacteristic, int expectedNumerator, int expectedDenominator)
 {
     int c, n, d;
-
+    
     //if the conversion from C string to integers can take place
     if (characteristic(number, c)) //&& mantissa(number, n, d))
     {
@@ -190,14 +190,16 @@ void shouldNotConvert(const char number[])
     {
         cout << "Test failed: '" << number << "' "
             << "was parsed when it should NOT have been." << endl;
+
     }
+    
     
 }
 
 //--
 void testMath()
 {
-    //add
+
     testAdd();
     testSubtract();
     testMultiply();
@@ -206,6 +208,7 @@ void testMath()
 //--
 void testAdd()
 {
+    
     const int SHORT_ARRAY_LENGTH = 5;
     char shortArray[SHORT_ARRAY_LENGTH];
 
@@ -279,7 +282,7 @@ void testAdd()
 
 void testSubtract()
 {
-     const int SHORT_ARRAY_LENGTH = 5;
+    const int SHORT_ARRAY_LENGTH = 5;
     char shortArray[SHORT_ARRAY_LENGTH];
 
     const int MEDIUM_ARRAY_LENGTH = 10;
@@ -478,5 +481,3 @@ void testDivide()
     divide(1, 1, 8, 1, 2, 3, largeArray, LARGE_ARRAY_LENGTH);
     shouldConvert(largeArray, 0, 675, 1000);
 }
-
-
