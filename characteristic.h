@@ -1,8 +1,8 @@
 #pragma once
 
-bool IsItGood(char numString[],const int& c);
+bool IsItGood(const char numString[],const int& c);
 
-int numConverter(char* numString);
+int numConverter(const char * numString, bool is_neg);
 
-bool characteristic(char numString[], int& c);
+bool characteristic(const char numString[], int& c);
 
